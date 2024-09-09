@@ -13,6 +13,7 @@ The Database should be able to represent:
 - grades for Interns for each subject
 - final/average grades of Interns.
 - Intern-Instructor relationship
+- Projects
 - Intern, Instructor and project relationship
 
 The Sabudh Institution takes Interns in Batches
@@ -25,6 +26,7 @@ The Sabudh Institution takes Interns in Batches
 - **Intern (Student)**
 - **Instructor**
 - **Subject**
+- **PassionProject**
 - **Assignment**
 - **Grade**
 
@@ -60,6 +62,14 @@ The Sabudh Institution takes Interns in Batches
    - Subject_Name
    - Instructor ID (Foreign Key referencing Instructor)
 
+- **PassionProject**:
+   - ID (Primary Key)
+   - Name
+   - Type
+   - Head Instructor (Foreign Key referencing Instructor)
+   - Guide Instructor1 (Foreign Key referencing Instructor)
+   - Guide Instructor2 (Foreign Key referencing Instructor)
+
 - **Assignment**:
    - ID (Primary Key)
    - Subject ID (Foreign Key referencing Subject)
@@ -71,6 +81,7 @@ The Sabudh Institution takes Interns in Batches
    - Student ID (Foreign Key referencing Intern)
    - Subject ID (Foreign Key referencing Subject)
    - Assignment ID (Foreign Key referencing Assignment)
+   - Teacher ID (Foreign Key referencing Instructor)
    - Score
    - Date
 
@@ -105,6 +116,10 @@ The Sabudh Institution takes Interns in Batches
 * AN Instructor can teach one subject
 * One to Many Relationship
 
+### Student - PassionProject:
+* A student can take part in one project
+* A Project can have many students
+* Many to One Relationship
 
 ### Assignment - Grade (For Student):
 * An Assignment can have one grade
@@ -116,8 +131,7 @@ The Sabudh Institution takes Interns in Batches
 - Removed Subject ID from Grade Entity because we can link grade with subject through assignment entity.
 - Shift Student Instructor Relationship to Batch Instructor Relationship, for memory saving.
 - Shift Subject-Student Relationship with Batch - Subject Relationship for memory saving.
-- Removed Subjects Table and merged it with Batch Subject Table
-- Removed Batch Instructor Table and merged it with Batch Subject Table.
+
 ## Views:
 - Created View for Average Scores of a Given Student
 - Created View for Average Intern Scores Under a Given Instructor
