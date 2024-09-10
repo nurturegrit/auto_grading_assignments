@@ -118,6 +118,7 @@ The Sabudh Institution takes Interns in Batches
 - Shift Subject-Student Relationship with Batch - Subject Relationship for memory saving.
 - Removed Subjects Table and merged it with Batch Subject Table
 - Removed Batch Instructor Table and merged it with Batch Subject Table.
+
 ## Views:
 - Created View for Average Scores of a Given Student
 - Created View for Average Intern Scores Under a Given Instructor
