@@ -113,7 +113,7 @@ if __name__ == '__main__':
     # Email details
     student_email = "glennamayola05@gmail.com"  # Replace with actual student email
     from_email = "21a12.glenna@sjec.ac.in"  # Replace with your email
-    from_password = "tdge xdrz rrso yvgr"  # Replace with your email password
+    from_password = "xxxxxx"  # Replace with your email password
 
     # Send the feedback via email
     grader.send_feedback(student_email, "Assessment Feedback", feedback_message, from_email, from_password)
