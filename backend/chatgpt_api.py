@@ -35,7 +35,7 @@ class HomeworkGrader:
 # print(feedback)
 
 if __name__ == '__main__':
-    with open('git_hub_key.txt') as file:
+    with open('Keys/key.txt') as file:
         token = file.readline().strip()
     endpoint = "https://models.inference.ai.azure.com"
     model_name = "gpt-4o-mini"
