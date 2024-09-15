@@ -1,3 +1,0 @@
-batch_number = 13
-assignment_topic = 
-assignment_id = 
