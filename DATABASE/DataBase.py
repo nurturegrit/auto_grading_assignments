@@ -5,10 +5,10 @@ class Connect_DB:
         self.connection = sqlite3.connect(path)
         self.cursor = self.connection.cursor()
 
-    def insert_into_assignments(self, assignment_topic, subject, batch):
-        query = '''INSERT INTO assignments (assignment_topic, subject_name, batch_number)
+    def insert_into_assignments(self, subject_id, assignment_topic, total_score):
+        query = '''INSERT INTO assignments (subject_id, assignment_topic, total_score)
                    VALUES (?, ?, ?)'''
-        self.cursor.execute(query, (assignment_topic, subject, batch))
+        self.cursor.execute(query, (subject_id, assignment_topic, total_score))
         self.connection.commit()
     
     def get_intern_id(self, email=None, phone=None):
@@ -27,12 +27,18 @@ class Connect_DB:
         intern_id = self.cursor.fetchone()
         return intern_id
 
-    def insert_into_grades(self, assignment_id, score, phone=None, email=None, intern_id=None):
-        if phone == email == intern_id:
+    def insert_into_grades(self, score, intern_phone=None, intern_email=None, intern_id=None, assignment_id=None, assignment_topic=None, subject_name=None, batch_number=None):
+        if assignment_id is None:
+            if not all(assignment_topic, subject_name, batch_number):
+                return "Input an assignment_id or three identifiers: assignment_topic, subject_name, batch_number)"
+            else:
+                assignment_id= self.get_assignment_id(assignment_topic, subject_name, batch_number)
+
+        if intern_phone == intern_email == intern_id:
             return "Input Intern Identifier"
-        elif not intern_id:
-            intern_id = self.get_intern_id(email, phone)
-            
+        elif intern_id is None:
+            intern_id = self.get_intern_id(intern_email, intern_phone)
+
         query = '''INSERT INTO grades (intern_id, assignment_id, score) 
                    VALUES (?, ?, ?)'''
         self.cursor.execute(query, (intern_id, assignment_id, score))
@@ -47,6 +53,12 @@ class Connect_DB:
         self.cursor.execute(query, (subject_name, batch_number, assignment_topic))
         assignment_id = self.cursor.fetchone()
         return int(assignment_id)
-
+    
+    def get_subject_id(self, subject_name, batch_number):
+        query = '''SELECT "id"  FROM "subjects" WHERE "subject_name" = ? AND "batch_number" = ?'''
+        self.cursor.execute(query, (subject_name, batch_number))
+        subject_id = self.cursor.fetchone()
+        return subject_id
+    
     def close_connection(self):
         self.connection.close()

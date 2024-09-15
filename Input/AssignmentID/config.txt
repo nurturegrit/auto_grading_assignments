@@ -1,2 +1,2 @@
-assignment_topic, subject_name, batch_number
-Week1Python, Python, 13
+assignment_topic, total_score, subject_name, batch_number
+Week1Python, 100, Python, 13
