@@ -9,7 +9,7 @@ class HomeworkGrader:
         self.model_name = model_name
         self.output_words = output_limit
 
-    def grade_answer(self, question, answer):
+    def grade_answer(self, question, answer, full_score):
         response = self.client.chat.completions.create(
             messages=[
                 {
@@ -18,7 +18,7 @@ class HomeworkGrader:
                 },
                 {
                     "role": "user",
-                    "content": f"Here is My Homework for assignment {question}. Answer: {answer}. Please Grade it from 1 to 100 and provide short but valuable feedback while telling when and where marks are deducted in a section called Feedback.",
+                    "content": f"Here is My Homework for assignment {question}. Answer: {answer}. Please Grade it from 1 to {full_score} and provide short but valuable feedback while telling when and where marks are deducted in a section called Feedback.",
                 }
             ],
             model=self.model_name,
@@ -40,5 +40,5 @@ if __name__ == '__main__':
     model_name = "gpt-4o-mini"
     q = 'You are given a list of number. Make a function for finding unique elements'
     grader = HomeworkGrader(token, endpoint, model_name, 200)
-    grade = grader.grade_answer(question=q,answer= 'def unique(arr):\nreturn set(arr)')
+    grade = grader.grade_answer(question=q,answer= 'def unique(arr):\nreturn set(arr)',full_score=100)
     print(grade)
