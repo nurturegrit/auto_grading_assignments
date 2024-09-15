@@ -1,1 +1,1 @@
-2nd question
+Write a program to find the three numbers whose product is the maximum in a given array.

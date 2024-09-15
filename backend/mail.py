@@ -35,7 +35,7 @@ def extract_marks_and_feedback(grading_response):
         marks_pattern = r'(\d+)\s*/\s*100'
         marks = re.search(marks_pattern, grading_response)
         marks = marks.group(1) if marks else "Marks not found"
-        
+
         # Regular expression to extract feedback
         feedback_pattern = r'Feedback:\s*(.*)'
         feedback = re.search(feedback_pattern, grading_response, re.DOTALL)

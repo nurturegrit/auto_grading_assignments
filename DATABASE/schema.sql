@@ -26,12 +26,12 @@ CREATE TABLE "mentors" (
 );
  
 CREATE TABLE "subjects" (
-    "id" PRIMARY KEY INTEGER,
+    "id" INTEGER PRIMARY KEY,
     "batch_number" INTEGER NOT NULL,
     "subject_name" TEXT NOT NULL,
     "mentor_id" INTEGER NOT NULL,
-    FOREIGN KEY ("batch_number") REFERENCES "batches" ("batch_number"),
-    FOREIGN KEY ("mentor_id") REFERENCES "mentors" ("id")
+    FOREIGN KEY ("batch_number") REFERENCES "batches"("batch_number"),
+    FOREIGN KEY ("mentor_id") REFERENCES "mentors"("id")
 );
 
 CREATE TABLE "assignments" (
@@ -39,7 +39,7 @@ CREATE TABLE "assignments" (
     "subject_id" INTEGER NOT NULL,
     "assignment_topic" TEXT NOT NULL,
     "total_score" INTEGER,
-    FOREIGN KEY ("subject_id") REFERENCES "subjects" ("id"),
+    FOREIGN KEY ("subject_id") REFERENCES "subjects"("id")
 );
 
 CREATE TABLE "grades" (
@@ -47,6 +47,6 @@ CREATE TABLE "grades" (
     "assignment_id" INTEGER NOT NULL,
     "score" INTEGER NOT NULL,
     PRIMARY KEY ("intern_id", "assignment_id"),
-    FOREIGN KEY ("intern_id") REFERENCES "interns" ("id"),
-    FOREIGN KEY ("assignment_id") REFERENCES "assignments" ("id"),
+    FOREIGN KEY ("intern_id") REFERENCES "interns"("id"),
+    FOREIGN KEY ("assignment_id") REFERENCES "assignments"("id")
 );

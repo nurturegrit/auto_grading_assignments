@@ -14,11 +14,11 @@ class HomeworkGrader:
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a master at python algorithms and data structures.",
+                    "content": "You are a master at python algorithms and data structures. You Always put Score at the front of your feedback like Score: 85/100. If the answer is totally irrelevant to the question or if there is no answer. You are merciless and give 0/100 score.",
                 },
                 {
                     "role": "user",
-                    "content": f"Here is My Homework for assignment {question}. Answer: {answer}. Please Grade it from 1 to {full_score} and provide short but valuable feedback while telling when and where marks are deducted in a section called Feedback.",
+                    "content": f"""Here is My Homework for Question {question}.\nAnswer: {answer}.\n\nGrade it from 0 to {full_score}.Provide concise and valuable feedback while telling when marks are deducted.\nProvide Output like 'Score: 85/100\n\nFeedback: Great job! You can improve by optimizing your code further at these points: `bullet points, each one in new line`.\nBest regards,\nSabudh.""",
                 }
             ],
             model=self.model_name,
