@@ -18,12 +18,20 @@ class GetInputs:
         self.questions = dict()
         self.get_questions()
         self.solutions = dict()
-        self.populate_dict()
+        self.populate_solutions()
 
     
     def get_questions(self):
+        """
+        Populates the Questions dict
+        with format:-
+        {question_id: 'question_in_string'}
+        """
         dir = os.path.join(self.dir, 'Questions')
         ...
 
-    def populate_dict(self):
+    def populate_solutions(self):
+        """
+        Populates the Solutions dict as per the requirements in class definition
+        """
         ...

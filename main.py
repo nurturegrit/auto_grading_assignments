@@ -1,15 +1,20 @@
 from backend.chatgpt_api import HomeworkGrader
-from database.class_db import Connect_DB
+from database.DataBase import Connect_DB
 from backend.mail import send_feedback, extract_marks_and_feedback
 from backend.getinput import GetInputs
-
+import sys, csv, os
 
 
 def main():
-    # ------------- Taking Input ------------------------------ #
-    assignment_directory = ''
-
+    # ------------- Taking Input and config files------------------------------ #
+    assignment_directory = os.path.join('Input', sys.argv[1])
     inputs = GetInputs(assignment_directory)
+    
+    #------------- Connect with database ---------------------- #
+    db_path = os.path.join('database', 'grader.db')
+    db = Connect_DB(db_path)
+
+
     
     #------------------ Grading --------------------------------- #
     with open('Keys/key.txt') as file:
@@ -21,8 +26,10 @@ def main():
     # Initialize Grader
     autograder = HomeworkGrader(token, endpoint, model_name, output_tokens)
     # Dict for storing grades
-
+    grades_by_interns = {}
+    total_score = 0
     for question_id in inputs.questions:
+            total_score += 100
             question = inputs.questions[question_id]
             # for each question, select corresponding solution by interns
             for intern_id in inputs.solutions:
@@ -30,9 +37,7 @@ def main():
                  response = autograder.grade_answer(question, answer)
 
                  grade, feedback = extract_marks_and_feedback(response)
-
-                 
-
+                 grades_by_interns[intern_id] = grades_by_interns.get(intern_id, 0) + int(grade)
 
 
     #--------------------- Storing Grades in Database ------------------ #
