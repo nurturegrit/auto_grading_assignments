@@ -1,4 +1,4 @@
-import smtplib
+import smtplib, re
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
@@ -14,7 +14,7 @@ def send_feedback(to_email, subject, feedback_message, from_email, from_password
         msg.attach(MIMEText(feedback_message, 'plain'))
         
         # Setting up the SMTP server
-        server = smtplib.SMTP('smtp.gmail.com', 587)  
+        server = smtplib.SMTP('smtp.mail.yahoo.com', 587)  
         server.starttls()  
         
         
@@ -28,6 +28,18 @@ def send_feedback(to_email, subject, feedback_message, from_email, from_password
     except Exception as e:
         print(f"Error sending email to {to_email}: {str(e)}")
 
+def extract_marks_and_feedback(grading_response):
+        # Regular expression to extract marks
+        marks_pattern = r'(\d+)\s*/\s*100'
+        marks = re.search(marks_pattern, grading_response)
+        marks = marks.group(1) if marks else "Marks not found"
+        
+        # Regular expression to extract feedback
+        feedback_pattern = r'Feedback:\s*(.*)'
+        feedback = re.search(feedback_pattern, grading_response, re.DOTALL)
+        feedback = feedback.group(1).strip() if feedback else "Feedback not found"
+        
+        return marks, feedback
 
 if __name__ == "__main__":
     student_email = "example@gmail.com"  # Replace with actual student email

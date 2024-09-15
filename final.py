@@ -57,7 +57,7 @@ class HomeworkGrader:
             msg.attach(MIMEText(feedback_message, 'plain'))
             
             # Setting up the SMTP server
-            server = smtplib.SMTP('smtp.gmail.com', 587)  
+            server = smtplib.SMTP('smtp.mail.yahoo.com', 587)  
             server.starttls()  
             
             # Logging into the sender's email account
@@ -75,7 +75,7 @@ class HomeworkGrader:
 # Example usage
 if __name__ == '__main__':
     # Reading the API token
-    with open('git_hub_key.txt') as file:
+    with open('Keys/key.txt') as file:
         token = file.readline().strip()
 
     endpoint = "https://models.inference.ai.azure.com"
@@ -111,9 +111,10 @@ if __name__ == '__main__':
     """
 
     # Email details
-    student_email = "glennamayola05@gmail.com"  # Replace with actual student email
-    from_email = "21a12.glenna@sjec.ac.in"  # Replace with your email
-    from_password = "xxxxxx"  # Replace with your email password
+    student_email = "sumitjaidka786@gmail.com"  # Replace with actual student email
+    from_email = "sumitatcultivatewill@yahoo.com"  # Replace with your email
+    with open("Keys/smtppassforyahoo.txt") as file:
+        from_password = file.readline().strip() # Replace with your email password
 
     # Send the feedback via email
     grader.send_feedback(student_email, "Assessment Feedback", feedback_message, from_email, from_password)
