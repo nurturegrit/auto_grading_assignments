@@ -98,13 +98,13 @@ def setup_db(tmp_path):
 def test_get_assignment_id(setup_db):
     db = Connect_DB(setup_db)
     assignment_id = db.get_assignment_id("Python Basics", "Python", 13)
-    assert assignment_id == (1,), "Assignment ID should be 1"
+    assert assignment_id == 1, "Assignment ID should be 1"
 
 
 def test_get_intern_id(setup_db):
     db = Connect_DB(setup_db)
     intern_id = db.get_intern_id(email="ritwicka.majumder7@gmail.com")
-    assert intern_id == (1,), "Intern ID should be 1"
+    assert intern_id == 1, "Intern ID should be 1"
 
 
 def test_insert_into_grades(setup_db):
