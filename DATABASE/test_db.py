@@ -5,14 +5,20 @@ from DataBase import Connect_DB
 
 # Fixture to create a temporary database for testing
 @pytest.fixture
-def setup_db(tmp_path):
-    db_file = tmp_path / "test.db"
+def setup_db():
+    db_file = "test.db"
     conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
 
     # Create schema for testing
     cursor.executescript(
         """
+        DROP TABLE IF EXISTS grades;
+        DROP TABLE IF EXISTS assignments;
+        DROP TABLE IF EXISTS subjects;
+        DROP TABLE IF EXISTS mentors;
+        DROP TABLE IF EXISTS interns;
+        DROP TABLE IF EXISTS batches;
         CREATE TABLE batches (
             batch_number INTEGER PRIMARY KEY,
             start_date NUMERIC NOT NULL,
@@ -91,7 +97,8 @@ def setup_db(tmp_path):
     conn.commit()
     conn.close()
 
-    return db_file
+    yield db_file
+
 
 
 # Test cases
@@ -130,3 +137,11 @@ def test_close_connection(setup_db):
         db.cursor.execute(
             "SELECT * FROM grades"
         )  # Should raise error since connection is closed
+
+
+# if __name__ == "__main__":
+#     setup_db()
+#     test_get_intern_id('test.db')
+#     test_get_assignment_id('test.db')
+#     test_insert_into_grades('test.db')
+
