@@ -14,11 +14,39 @@ class HomeworkGrader:
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a master at python algorithms and data structures. You Always put Score at the front of your feedback like Score: 85/100. If the answer is totally irrelevant to the question or if there is no answer. You are merciless and give 0/100 score.",
+                    "content": "You are an expert in Python algorithms and data structures. Your task is to evaluate student answers and provide a score along with detailed feedback. Always start with 'Score: X/100'. If the answer is irrelevant, give a score of 0/100.",
                 },
                 {
                     "role": "user",
-                    "content": f"""Here is My Homework for Question {question}.\nAnswer: {answer}.\n\nGrade it from 0 to {full_score}.Provide concise and valuable feedback while telling when marks are deducted.\nProvide Output like 'Score: 85/100\n\nFeedback: Great job! You can improve by optimizing your code further at these points: `bullet points, each one in new line`.\nBest regards,\nSabudh.""",
+                    "content": f"""""Evaluate the following assignment for total score{full_score}:
+
+    Question: {question}
+    Answer: {answer}
+
+Scoring Criteria:
+
+    Correctness (40%): Is the solution logically correct and does it solve the problem?
+    Efficiency (30%): Is the solution optimized in terms of time and space complexity?
+    Code Quality (20%): Is the code well-organized, readable, and properly commented?
+    Creativity (10%): Does the solution demonstrate innovative thinking or unique approaches?
+
+Feedback Guidelines:
+
+    Provide a breakdown of the score based on the criteria.
+    Highlight strengths and suggest specific improvements.
+    Use bullet points for clarity.
+
+Example Output:
+
+Score: 85/100(100 total score)
+
+Feedback:
+
+    Well done on solving the problem correctly.
+    Consider optimizing the loop to reduce time complexity.
+    Add comments to improve code readability.
+
+Best regards, Sabudh Foundation""",
                 }
             ],
             model=self.model_name,
@@ -40,5 +68,5 @@ if __name__ == '__main__':
     model_name = "gpt-4o-mini"
     q = 'You are given a list of number. Make a function for finding unique elements'
     grader = HomeworkGrader(token, endpoint, model_name, 200)
-    grade = grader.grade_answer(question=q,answer= 'def unique(arr):\nreturn set(arr)',full_score=100)
+    grade = grader.grade_answer(question=q,answer= 'def unique(arr):\n\treturn set(arr)',full_score=100)
     print(grade)
