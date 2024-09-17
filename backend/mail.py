@@ -32,10 +32,9 @@ def send_feedback(smtp_address, to_email, subject, feedback_message, from_email,
 
 def extract_marks_and_feedback(grading_response):
         # Regular expression to extract marks
-        marks_pattern = r'(\d+)\s*/\s*100'
+        marks_pattern = r'(\d+)\s*/\s*\d+'
         marks = re.search(marks_pattern, grading_response)
         marks = marks.group(1) if marks else "Marks not found"
-
         # Regular expression to extract feedback
         feedback_pattern = r'Feedback:\s*(.*)'
         feedback = re.search(feedback_pattern, grading_response, re.DOTALL)

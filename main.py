@@ -56,7 +56,7 @@ def main():
     per_score = 0
     for question_id in inputs.questions:
              # question_score = inputs.questions[question_id]['full_score']
-             question_score = 100
+             question_score = 10
              per_score += question_score
              question = inputs.questions[question_id]
              # for each question, select corresponding solution by interns
@@ -66,6 +66,7 @@ def main():
                     answer = inputs.solutions[intern_id][question_id]
                     feedback += f"ANSWER:\n\n{answer}"
                     response = autograder.grade_answer(question, answer, question_score)
+                    print(response)
                     result = extract_marks_and_feedback(response)
                     grades = result[0]
                     feedback += result[1]

@@ -14,7 +14,7 @@ class HomeworkGrader:
             messages=[
                 {
                     "role": "system",
-                    "content": "You are an expert in Python algorithms and data structures. Your task is to evaluate student answers and provide a score along with detailed feedback. Always start with 'Score: X/100'. If the answer is irrelevant, give a score of 0/100.",
+                    "content": "You are an expert in Python algorithms and data structures. Your task is to evaluate student answers and provide a score along with detailed feedback. Always start with 'Score: X/{full_score}'. If the answer is irrelevant, give a score of 0/{full_score}.",
                 },
                 {
                     "role": "user",
@@ -38,7 +38,7 @@ Feedback Guidelines:
 
 Example Output:
 
-Score: 85/100(100 total score)
+Score: 8.5/{full_score}({full_score} total score)
 
 Feedback:
 
