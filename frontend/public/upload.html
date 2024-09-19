@@ -1,0 +1,337 @@
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            color: #4a90e2;
+            margin-bottom: 20px;
+        }
+
+        .task-container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        label {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #4a90e2;
+            border-radius: 8px;
+            background-color: #f5faff;
+        }
+
+        .submit-container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #submitBtn {
+            padding: 12px 24px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        #submitBtn:hover {
+            background-color: #357abd;
+        }
+
+        .button-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .button-container button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .add-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .remove-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .remove-btn:disabled {
+            background-color: #c82333;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Upload Your Assignment</h2>
+        <form id="uploadForm" action="/upload_handler" method="post" enctype="multipart/form-data">
+            <div id="taskFieldsContainer">
+               
+                <div class="task-container">
+                    <label for="taskFile1">Question 1 File:</label>
+                    <input type="file" id="taskFile1" name="taskFile1" accept=".py">
+                </div>
+            </div>
+
+ 
+            <div class="button-container">
+                <button type="button" class="add-btn" id="addTaskBtn">Add File</button>
+                <button type="button" class="remove-btn" id="removeTaskBtn" disabled>Remove File</button>
+            </div>
+
+            
+            <div class="submit-container">
+                <button type="submit" id="submitBtn">Submit All</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('uploadForm');
+            const phoneNumber = localStorage.getItem('phoneNumber'); // Get the phone number from localStorage
+    
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+    
+                const formData = new FormData(form);
+                formData.append('phoneNumber', phoneNumber); // Add the phone number to the form data
+    
+                fetch('/upload_handler', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.text())
+                .then(result => {
+                    alert('Files uploaded successfully!');
+                    window.location.href = 'thankyou.html';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    </script>
+    
+    
+</body>
+</html>-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Files</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center; /* Center content horizontally */
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center items horizontally */
+        }
+
+        .form-container h2 {
+            text-align: center;
+            color: #4a90e2;
+            margin-bottom: 20px;
+        }
+
+        label {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+            width: 100%;
+            text-align: left;
+        }
+
+        input[type="file"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #4a90e2;
+            border-radius: 8px;
+            background-color: #f5faff;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            margin-top: 10px; /* Add space between buttons and file inputs */
+        }
+
+        button:hover {
+            background-color: #357abd;
+        }
+
+        .error-message {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .file-input-container {
+            width: 100%;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .remove-btn {
+            padding: 10px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            margin-top: 10px; /* Space above the button */
+        }
+
+        .remove-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .file-input-container:last-child .remove-btn {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Upload Your Files</h2>
+        <form id="uploadForm" action="/upload_handler" method="post" enctype="multipart/form-data">
+            <div class="error-message" id="error-message"></div>
+            <div id="fileInputs">
+                <!-- Dynamic file input fields will be added here -->
+                <div class="file-input-container">
+                    <label for="file1">Choose a file:</label>
+                    <input type="file" name="file" id="file1" />
+                    <button type="button" class="remove-btn" onclick="removeFileInput(this)">Remove</button>
+                </div>
+            </div>
+            <button type="button" onclick="addFileInput()">Add another file</button>
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+
+    <script>
+        let fileCount = 1;
+
+        function addFileInput() {
+            fileCount++;
+            const fileInputsDiv = document.getElementById('fileInputs');
+            const newFileInput = document.createElement('div');
+            newFileInput.classList.add('file-input-container');
+            newFileInput.innerHTML = `
+                <label for="file${fileCount}">Choose a file:</label>
+                <input type="file" name="file" id="file${fileCount}" />
+                <button type="button" class="remove-btn" onclick="removeFileInput(this)">Remove</button>
+            `;
+            fileInputsDiv.appendChild(newFileInput);
+        }
+
+        function removeFileInput(button) {
+            button.parentElement.remove();
+        }
+
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            const fileInputs = document.querySelectorAll('input[type="file"]');
+            const errorMessage = document.getElementById('error-message');
+
+            let allFilesSelected = true;
+            fileInputs.forEach(input => {
+                if (input.files.length === 0) {
+                    allFilesSelected = false;
+                }
+            });
+
+            if (!allFilesSelected) {
+                errorMessage.textContent = 'Please select a file for all file inputs';
+                event.preventDefault(); // Prevent form submission
+            } else {
+                errorMessage.textContent = ''; // Clear error message
+                // Redirect to thankyou.html after form submission
+                setTimeout(() => {
+                    window.location.href = 'thankyou.html';
+                }, 100); // Slight delay to allow form submission
+            }
+        });
+    </script>
+
+</body>
+</html>

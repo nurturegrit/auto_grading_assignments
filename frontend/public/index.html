@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Submission Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content:center; /* Center content horizontally */
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center items horizontally */
+        }
+
+        .form-container h2 {
+            text-align: center;
+            color: #4a90e2;
+            margin-bottom: 20px;
+        }
+
+        label {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+            width: 100%;
+            text-align: left;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px;
+            margin: 8px 0 20px;
+            border: 2px solid #4a90e2;
+            border-radius: 8px;
+            background-color: #f5faff;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus {
+            outline: none;
+            border-color: #28a745;
+        }
+
+        .submit-btn {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            text-align: center;
+        }
+
+        .submit-btn:hover {
+            background-color: #357abd;
+        }
+
+        .form-group {
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Submit Your Details</h2>
+        <form id="detailsForm">
+            <div class="form-group">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Your Email ID:</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Your phoneNumber:</label>
+                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" pattern="[0-9]{10}" required>
+            </div>
+
+            <button type="submit" class="submit-btn">Click here to submit your details</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('detailsForm');
+    
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+    
+                // Save the phone number in localStorage
+                const phoneNumber = document.getElementById('phone').value;
+                localStorage.setItem('phoneNumber', phoneNumber);
+    
+                // Redirect to upload.html after form submission
+                window.location.href = 'upload.html';
+            });
+        });
+    </script>
+    
+    
+
+</body>
+</html>
