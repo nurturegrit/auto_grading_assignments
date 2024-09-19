@@ -62,10 +62,13 @@ Best regards, Sabudh Foundation""",
 # print(feedback)
 
 if __name__ == '__main__':
+    import json
     with open('Keys/key.txt') as file:
         token = file.readline().strip()
-    endpoint = "https://models.inference.ai.azure.com"
-    model_name = "gpt-4o-mini"
+    with open('Keys/autograder_config.json') as file:
+        config = json.load(file)
+        endpoint = config['endpoint']
+        model_name = config['model_name']
     q = 'You are given a list of number. Make a function for finding unique elements'
     grader = HomeworkGrader(token, endpoint, model_name, 200)
     grade = grader.grade_answer(question=q,answer= 'def unique(arr):\n\treturn set(arr)',full_score=100)
