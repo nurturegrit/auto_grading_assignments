@@ -1,7 +1,7 @@
-from backend.chatgpt_api import HomeworkGrader
+from backend.api.chatgpt_api import HomeworkGrader
 from database.DataBase import Connect_DB
-from backend.mail import send_feedback, extract_marks_and_feedback
-from backend.getinput import GetInputs
+from backend.api.mail import send_feedback, extract_marks_and_feedback
+from backend.directory.getinput import GetInputs
 import sys, json, os
 
 def main():

@@ -2,7 +2,7 @@ import os
 
 
 class GetInputs:
-    def __init__(self, dir):
+    def __init__(self, dir, solution=True):
         """
         dir = assignment_directory with a subdirectory questions, internid, internid2, intern3..
         -----------------------------------------------------------------------------------------
@@ -18,8 +18,9 @@ class GetInputs:
             return
         self.questions = dict()
         self.get_questions()
-        self.solutions = dict()
-        self.populate_dict()
+        if solution:
+            self.solutions = dict()
+            self.populate_dict()
 
     def get_questions(self):
         """
