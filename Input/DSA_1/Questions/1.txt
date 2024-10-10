@@ -1,0 +1,10 @@
+------------------------DESCRIPTION----------------
+Question: `Make a Hello World Using Linked Lists and add those lists to a stack.`
+
+
+
+--Constrains Start--
+- The Function should be named 'solution'
+- The Function should take a single parameter, which is a list of strings.
+- The Function should output a single string that concatenates the list elements with a space in between.
+--Constrains End--

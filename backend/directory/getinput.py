@@ -41,6 +41,8 @@ class GetInputs:
         Populates self.solutions with intern IDs as keys and their corresponding answers as values.
         """
         for intern_id in os.listdir(self.dir):
+            if intern_id == 'Test Cases':
+                continue
             intern_dir = os.path.join(self.dir, intern_id)
             if os.path.isdir(intern_dir) and intern_id.lower() != "questions":
                 self.solutions[intern_id] = {}

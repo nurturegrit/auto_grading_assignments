@@ -1,4 +1,4 @@
-def unique(arr):
+def solution(arr):
     result = []
     for i in arr:
         if i not in result:

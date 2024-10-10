@@ -1,4 +1,4 @@
-def max_product(arr):
+def solution(arr):
     n = len(arr)
     max_prod = float('-inf')
     for i in range(n):

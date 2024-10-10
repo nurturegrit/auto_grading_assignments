@@ -2,6 +2,7 @@ from backend.api.chatgpt_api import HomeworkGrader
 from database.DataBase import Connect_DB
 from backend.api.mail import send_feedback, extract_marks_and_feedback
 from backend.directory.getinput import GetInputs
+from backend.directory.run_test_cases import dynamic_import_and_test
 import sys, json, os
 
 def main():
@@ -34,13 +35,13 @@ def main():
     db_path = os.path.join('database', 'data.db')
     db = Connect_DB(db_path)
 
+
     # Insert the new assignment in the Database
     subject_id = db.get_subject_id(subject_name, batch_number)
     db.insert_into_assignments(subject_id, assignment_topic, total_score)
     # Get Assignment ID for storing scores
     assignment_id = db.get_assignment_id(assignment_topic=assignment_topic, subject_name=subject_name, batch_number=batch_number)
 
-    
     #------------------ Grading --------------------------------- #
     with open('Keys/key.txt') as file:
         token = file.readline().strip()
@@ -62,18 +63,33 @@ def main():
              # for each question, select corresponding solution by interns
              for intern_id in inputs.solutions:
                  feedback = f'\nFEEDBACK FOR QUESTION:\n{question}\n'
+
                  try:
+                    test_score, not_passed = dynamic_import_and_test(solution_file=question_id, intern_id=intern_id, assignment=sys.argv[1], test_case_folder='Test Cases')
+                    
                     answer = inputs.solutions[intern_id][question_id]
+
+                    if not_passed:
+                        for tc in not_passed:
+                            answer += '\n'
+                            answer += tc
+                    
                     feedback += f"ANSWER:\n\n{answer}"
+
                     response = autograder.grade_answer(question, answer, question_score)
-                    print(response)
+
                     result = extract_marks_and_feedback(response)
+
                     grades = result[0]
                     feedback += result[1]
+
                     grades_by_intern_id[intern_id] = grades_by_intern_id.get(intern_id, 0) + int(grades)
+
                     intern_email = db.get_intern_email(intern_id)
                     feedback_by_email[intern_email] = feedback_by_email.get(intern_email, '') + '\n- - - - - - - - - - - - - - - - - -\n\n' + feedback
+                 
                  except Exception as e:
+                     
                      print('FOR INTERN: ' + intern_id, 'QUESTION_ID: ' + question_id)
                      print(e)
 
@@ -82,10 +98,14 @@ def main():
     factor = total_score/per_score
     for intern_id in grades_by_intern_id:
         grades_by_intern_id[intern_id] *= factor
+        grades_by_intern_id[intern_id] = (grades_by_intern_id[intern_id] + test_score)/2
     
     for intern_id in grades_by_intern_id:
         score = grades_by_intern_id[intern_id]
         db.insert_into_grades(score, intern_id=intern_id, assignment_id=assignment_id)
+    db.close_connection()
+
+
     #---------------------- Send Feedback ------------------------------ #
     subject = f'Assessment Feedback For Assignment {assignment_topic}.'
 

@@ -54,8 +54,7 @@ class Connect_DB:
         if intern_phone == intern_email == intern_id == None:
             return "Input Intern Identifier"
         if intern_id is None:
-            intern_id = self.get_intern_id(intern_email, intern_phone)
-        print(intern_email, intern_id)        
+            intern_id = self.get_intern_id(intern_email, intern_phone)     
 
         query = '''INSERT INTO grades (intern_id, assignment_id, score) 
                    VALUES (?, ?, ?)'''
