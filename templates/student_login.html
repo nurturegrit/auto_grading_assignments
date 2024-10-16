@@ -69,13 +69,48 @@
             background-color: #0056b3;
             transform: translateY(-2px);
         }
+
+        /* Styles for flash messages */
+        .flash {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .flash.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .flash.danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .flash.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
     </style>
 </head>
 <body>
     <h1>Student Login</h1>
-    <form action="/student_dashboard" method="POST">
-        <input type="text" placeholder="Student Name" required>
-        <button type="submit">Login</button>
+    
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div>
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    
+    <form action="/student_login" method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.student_name(size=32, placeholder="Student Name") }}
+        {{ form.student_email(size=32, placeholder="Student Email") }}
+        {{ form.submit() }}
     </form>
 </body>
 </html>

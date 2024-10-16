@@ -1,4 +1,10 @@
 from openai import OpenAI
+import time
+import logging
+from datetime import datetime, timedelta
+
+# Configure logging
+logging.basicConfig(filename='api_usage.log', level=logging.INFO)
 
 class HomeworkGrader:
     def __init__(self, token, endpoint, model_name, output_limit):
@@ -7,7 +13,7 @@ class HomeworkGrader:
             api_key=token,
         )
         self.model_name = model_name
-        self.output_words = output_limit
+        self.output_words = output_limit  
 
     def grade_answer(self, question, answer, full_score):
         response = self.client.chat.completions.create(
@@ -54,6 +60,8 @@ Best regards, Sabudh Foundation""",
             max_tokens=self.output_words,
             top_p=1.
         )
+        logging.info(f"API request made.")
+
         return response.choices[0].message.content
 
 # Example usage:

@@ -6,7 +6,8 @@ INSERT INTO "batches" ("batch_number", "start_date", "end_date") VALUES
 -- Insert into interns
 INSERT INTO "interns" ("id", "type", "first_name", "last_name", "email", "phone", "date_of_birth", "gender", "batch_number") VALUES
 (1, 'Full Time', 'Sumit', 'Jaidka', 'sumitjaidka786@gmail.com', '1234567890', '2000-04-15', 'Male', 13),
-(2, 'Part Time', 'Jane', 'Doe', '20211468@sbsstc.ac.in', '0987654321', '1998-06-23', 'Female', 14);
+(2, 'Part Time', 'Sumit', 'Jaidka', 'sumitatcultivatewill@gmail.com', '0987654321', '1998-06-23', 'Male', 14);
+
 
 -- Insert into mentors
 INSERT INTO "mentors" ("id", "first_name", "last_name", "email", "phone") VALUES

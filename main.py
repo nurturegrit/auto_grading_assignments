@@ -16,8 +16,9 @@ def main():
          password = config['password']
          smtp_address = config['smtp']
          
-         
+    # Assignment Directory
     assignment_directory = os.path.join('Input', sys.argv[1])
+
     config_path = os.path.join(assignment_directory, 'config.json')
     with open(config_path) as file:
         config = json.load(file)
@@ -29,16 +30,12 @@ def main():
         batch_number = int(config['batch_number'])
             
     #----------------------- Taking Input --------------------------- #
-    inputs = GetInputs(assignment_directory)
+    inputs = GetInputs(assignment_directory, solution=True)
     
     #------------- Connect with database ---------------------- #
     db_path = os.path.join('database', 'data.db')
     db = Connect_DB(db_path)
 
-
-    # Insert the new assignment in the Database
-    subject_id = db.get_subject_id(subject_name, batch_number)
-    db.insert_into_assignments(subject_id, assignment_topic, total_score)
     # Get Assignment ID for storing scores
     assignment_id = db.get_assignment_id(assignment_topic=assignment_topic, subject_name=subject_name, batch_number=batch_number)
 
