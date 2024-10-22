@@ -5,7 +5,18 @@ from backend.directory.getinput import GetInputs
 from database.DataBase import Connect_DB
 import pathlib
 import sys
-import json, os
+import json, os, logging
+
+
+# Create a logger for grading
+add_assignment_logger = logging.getLogger('add_assignment_logger')
+add_assignment_handler = logging.FileHandler('teachers_view.log')
+add_assignment_handler.setLevel(logging.INFO)
+add_assignment_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+add_assignment_handler.setFormatter(add_assignment_formatter)
+add_assignment_logger.addHandler(add_assignment_handler)
+add_assignment_logger.setLevel(logging.INFO)
+add_assignment_logger.propagate = False
 
 def generate_description(test_case_maker, question, subject):
     return test_case_maker.get_test_cases(question, subject)

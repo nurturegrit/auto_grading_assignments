@@ -1,10 +1,5 @@
 from openai import OpenAI
-import time
 import logging
-from datetime import datetime, timedelta
-
-# Configure logging
-logging.basicConfig(filename='api_usage.log', level=logging.INFO)
 
 class HomeworkGrader:
     def __init__(self, token, endpoint, model_name, output_limit):
