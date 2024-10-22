@@ -10,8 +10,23 @@ import json, os
 def generate_description(test_case_maker, question, subject):
     return test_case_maker.get_test_cases(question, subject)
 
-def write_description(description, dir, file_name):
+def write_description(description, dir, file_name, write_json=True):
     Make_Files.make_question(description=description, directory=dir, file_name=file_name)
+
+    if not write_json:
+        return
+    # Save test case to JSON as well
+    test_cases_path = os.path.join(dir, "test_cases.json")
+    if not os.path.exists(test_cases_path):
+        test_cases = {}
+    else:
+        with open(test_cases_path, 'r') as f:
+            test_cases = json.load(f)
+
+    test_cases[file_name] = description
+
+    with open(test_cases_path, 'w') as f:
+        json.dump(test_cases, f, indent=4)
 
 def make_assignment(dir, secret_key, endpoint, model_name):
     test_case_maker = ASK_GPT4(secret_key, endpoint=endpoint, model_name=model_name)

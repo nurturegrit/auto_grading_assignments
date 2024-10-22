@@ -39,13 +39,13 @@ class ASK_GPT4:
                             Also give me some Contrains that should apply to the solution made so that I can run the test cases you provided correctly like:
                             --Constrains Start--
                             - The Function should be named 'solution'
-                            - The Function should take 'these parameters' as input.
-                            - The Function should ouput in such a way
+                            - The Function should take '#necessary parameters here#' as input.
+                            - The Function should ouput in such a way \n\t#Output Layout here#
                             --Constrains End--
                             DON'T GIVE ANYTHING ELSE"""),
             ],
-            temperature=0,
-            max_tokens=1000,
+            temperature=0.1,
+            max_tokens=2000,
             top_p=1.0
             )
         

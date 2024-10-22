@@ -24,11 +24,11 @@ class HomeworkGrader:
                 },
                 {
                     "role": "user",
-                    "content": f"""""Evaluate the following assignment for total score{full_score}:
+                    "content": f"""Evaluate the following assignment for total score{full_score}:
 
     Question: {question}
     Answer: {answer}
-
+```json
 Scoring Criteria:
 
     Correctness (40%): Is the solution logically correct and does it solve the problem?
@@ -52,7 +52,9 @@ Feedback:
     Consider optimizing the loop to reduce time complexity.
     Add comments to improve code readability.
 
-Best regards, Sabudh Foundation""",
+Best regards, Sabudh Foundation
+```
+""",
                 }
             ],
             model=self.model_name,

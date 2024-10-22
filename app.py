@@ -5,6 +5,7 @@ from wtforms.validators import DataRequired, Email
 import os, json, pathlib
 from werkzeug.utils import secure_filename
 from database.DataBase import Connect_DB
+import add_assignment
 
 class StudentLoginForm(FlaskForm):
     student_name = StringField('Student Name', validators=[DataRequired()])
@@ -66,9 +67,45 @@ def create_assignment():
         os.system(f'python add_assignment.py {assignment_name}')
         
         flash("Assignment created successfully!", "success")
-        return redirect('/teacher_dashboard')
+        return redirect(url_for('edit_test_cases', assignment_name=assignment_name.replace(' ', '_')))
 
     return render_template('create_assignment.html')
+
+@app.route('/edit_test_cases/<assignment_name>', methods=['GET', 'POST'])
+def edit_test_cases(assignment_name):
+    assignment_folder = f"Input/{assignment_name}"
+    test_cases_path = os.path.join(assignment_folder, "test_cases.json")
+
+    if request.method == 'POST':
+        # Load current test cases from JSON
+        test_cases = {}
+        if os.path.exists(test_cases_path):
+            with open(test_cases_path, 'r') as f:
+                test_cases = json.load(f)
+
+        # Collect all test cases data from the form
+        new_test_cases = {key.split('_')[2]: value for key, value in request.form.items() if key.startswith('test_case_')}
+        
+        # Update the existing test cases with new data
+        test_cases.update(new_test_cases)
+
+        # Save updated test cases back to JSON
+        with open(test_cases_path, 'w') as f:
+            json.dump(test_cases, f, indent=4)
+        
+        for file_name, test_case in new_test_cases.items():
+            add_assignment.write_description(description=test_case, dir=assignment_folder, file_name=file_name, write_json=False)
+
+        flash("Test cases updated successfully.", "success")
+        return redirect(url_for('teacher_dashboard'))
+
+    # Load test cases for rendering to the form
+    test_cases_dict = {}
+    if os.path.exists(test_cases_path):
+        with open(test_cases_path, 'r') as f:
+            test_cases_dict = json.load(f)
+
+    return render_template('edit_test_cases.html', test_cases_dict=test_cases_dict, assignment_name=assignment_name)
 
 @app.route('/student_login', methods=['GET', 'POST'])
 def student_login():
