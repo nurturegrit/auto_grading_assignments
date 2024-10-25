@@ -11,7 +11,7 @@ from database.DataBase import Connect_DB
 import add_assignment
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='teachers.log',level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 app_logger = logging.getLogger('app_logger')
 app_handler = logging.FileHandler('app.log')
@@ -45,42 +45,54 @@ def welcome():
     app_logger.info("Accessed welcome page.")
     return render_template('welcome.html')
 
+
 @app.route('/teacher_login')
 def teacher_login():
-    app_logger.info("Accessed teacher login page.")
-    return render_template('teacher_login.html')
+    try:
+        app_logger.info("Accessed teacher login page.")
+        return render_template('teacher_login.html')
+    except Exception as e:
+        app_logger.error(f"Error accessing teacher login page: {e}")
+        return "An error occurred", 500
+
 
 @app.route('/teacher_dashboard', methods=['GET', 'POST'])
 def teacher_dashboard():
-    app_logger.info("Accessed teacher dashboard.")
+    if request.method == 'POST':
+        app_logger.info("Teacher dashboard accessed with POST method.")
+    else:
+        app_logger.info("Teacher dashboard accessed with GET method.")
+    
     flash("Welcome to the Teacher Dashboard!", "info")
     return render_template('teacher_dashboard.html')
+
 
 def create_assignment_folder(assignment_name):
     """Helper function to create an assignment folder and log the operation."""
     assignment_folder = f"Input/{assignment_name.replace(' ', '_')}"
     try:
         os.makedirs(f"{assignment_folder}/Questions", exist_ok=True)
-        app_logger.info("Created folder for assignment: %s", assignment_folder)
+        app_logger.info("Successfully created folder structure for assignment: %s", assignment_folder)
         return assignment_folder
     except Exception as e:
-        app_logger.exception("Failed to create folder for assignment '%s'. Error: %s", assignment_name, e)
+        app_logger.error("Failed to create folder for assignment '%s'. Error: %s", assignment_name, e)
         raise
 
 def write_config_file(assignment_folder, config):
     """Helper function to write the config file and log the operation."""
+    config_file_path=f"{assignment_folder}/config.json"
     try:
-        with open(f"{assignment_folder}/config.json", 'w') as config_file:
+        with open(config_file_path, 'w') as config_file:
             json.dump(config, config_file, indent=4)
-        app_logger.info("Configuration file created for assignment '%s'.", config["assignment_topic"])
+        app_logger.info("Successfully created configuration file for assignment '%s'.", config.get("assignment_topic", "Unknown"))
     except Exception as e:
-        app_logger.exception("Failed to write config file for '%s'. Error: %s", config["assignment_topic"], e)
+        app_logger.error("Failed to write config file for assignment '%s'. Error: %s", config.get("assignment_topic", "Unknown"), str(e))
         raise
 
 @app.route('/create_assignment', methods=['GET', 'POST'])
 def create_assignment():
     if request.method == 'POST':
-        app_logger.debug("Creating assignment with form data: %s", request.form)
+        app_logger.debug("Received POST request to create assignment with form data: %s", request.form)
 
         assignment_name = request.form['assignment_name']
         subject = request.form['subject']
@@ -132,30 +144,55 @@ def edit_test_cases(assignment_name):
     assignment_folder = f"Input/{assignment_name}"
     test_cases_path = os.path.join(assignment_folder, "test_cases.json")
 
+    app_logger.debug("Editing test cases for assignment '%s' with folder path '%s'", assignment_name, assignment_folder)
+
     if request.method == 'POST':
+        app_logger.debug("Received POST request to update test cases for assignment '%s'", assignment_name)
+
         if os.path.exists(test_cases_path):
-            with open(test_cases_path, 'r') as f:
-                test_cases = json.load(f)
+            try:
+                with open(test_cases_path, 'r') as f:
+                    test_cases = json.load(f)
+                app_logger.info("Loaded existing test cases from '%s' for assignment '%s'.", test_cases_path, assignment_name)
+            except Exception as e:
+                app_logger.error("Failed to read existing test cases for assignment '%s'. Error: %s", assignment_name, str(e))
+                return redirect(url_for('edit_test_cases', assignment_name=assignment_name))
         else:
             test_cases = {}
+            app_logger.info("No existing test cases found. Initializing new test cases for assignment '%s'.", assignment_name)
 
-        new_test_cases = {key.split('_')[2]: value for key, value in request.form.items() if key.startswith('test_case_')}
-        test_cases.update(new_test_cases)
+        try:
+            new_test_cases = {key.split('_')[2]: value for key, value in request.form.items() if key.startswith('test_case_')}
+            app_logger.debug("New test cases to update: %s", new_test_cases)
 
-        with open(test_cases_path, 'w') as f:
-            json.dump(test_cases, f, indent=4)
+            test_cases.update(new_test_cases)
+            app_logger.info("Updated test cases for assignment '%s'.", assignment_name)
+
+            with open(test_cases_path, 'w') as f:
+                json.dump(test_cases, f, indent=4)
+            app_logger.info("Successfully wrote updated test cases to '%s' for assignment '%s'.", test_cases_path, assignment_name)
         
-        for file_name, test_case in new_test_cases.items():
-            add_assignment.write_description(description=test_case, dir=assignment_folder, file_name=file_name, write_json=False)
+            for file_name, test_case in new_test_cases.items():
+                add_assignment.write_description(description=test_case, dir=assignment_folder, file_name=file_name, write_json=False)
+                app_logger.info("Saved test case description for file '%s' in assignment '%s'.", file_name, assignment_name)
 
-        flash("Test cases updated successfully.", "success")
-        app_logger.info("Test cases for assignment '%s' updated.", assignment_name)
-        return redirect(url_for('teacher_dashboard'))
+            flash("Test cases updated successfully.", "success")
+            app_logger.info("Test cases for assignment '%s' updated.", assignment_name)
+            return redirect(url_for('teacher_dashboard'))
+        
+        except Exception as e:
+            app_logger.exception("Error occurred while updating test cases for assignment '%s': %s", assignment_name, str(e))
+            return redirect(url_for('edit_test_cases', assignment_name=assignment_name))
+        
 
     test_cases_dict = {}
     if os.path.exists(test_cases_path):
-        with open(test_cases_path, 'r') as f:
-            test_cases_dict = json.load(f)
+        try:
+            with open(test_cases_path, 'r') as f:
+                test_cases_dict = json.load(f)
+            app_logger.info("Loaded test cases for display in form for assignment '%s'.", assignment_name)
+        except Exception as e:
+            app_logger.error("Failed to load test cases for display for assignment '%s'. Error: %s", assignment_name, str(e))
 
     return render_template('edit_test_cases.html', test_cases_dict=test_cases_dict, assignment_name=assignment_name)
 
