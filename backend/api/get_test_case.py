@@ -40,9 +40,9 @@ class ASK_GPT4:
                             --Constrains Start--
                             - The Function should be named 'solution'
                             - The Function should take '#necessary parameters here#' as input.
-                            - The Function should ouput in such a way \n\t#Output Layout here#
+                            - The Function should ouput in such a way \n#Output Layout here#
                             --Constrains End--
-                            DON'T GIVE ANYTHING ELSE"""),
+                            IMPORTANT: The test cases should test the functionality of all the concepts that are related to topic of the question"""),
             ],
             temperature=0.1,
             max_tokens=2000,
