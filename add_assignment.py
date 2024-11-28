@@ -10,7 +10,7 @@ import json, os, logging
 
 # Create a logger for grading
 add_assignment_logger = logging.getLogger('add_assignment_logger')
-add_assignment_handler = logging.FileHandler('teachers_view.log')
+add_assignment_handler = logging.FileHandler('Logs/teachers_view.log')
 add_assignment_handler.setLevel(logging.INFO)
 add_assignment_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 add_assignment_handler.setFormatter(add_assignment_formatter)

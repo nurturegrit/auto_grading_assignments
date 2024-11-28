@@ -21,6 +21,7 @@ class ASK_GPT4:
                             Question: `{question}`
                             
                             --Test Cases Start--
+                            ```python
                             def test_solution(solution):
                                 passed = []
                                 not_passed = []
@@ -34,6 +35,7 @@ class ASK_GPT4:
                                 else:
                                     not_passed.append("Soltuion has not passed test case with inputs" + test_case_inputs + " result", expected_result)
                                 return passed, not_passed
+                            ```
                             --Test Cases End--
                             
                             Also give me some Contrains that should apply to the solution made so that I can run the test cases you provided correctly like:
@@ -42,7 +44,9 @@ class ASK_GPT4:
                             - The Function should take '#necessary parameters here#' as input.
                             - The Function should ouput in such a way \n#Output Layout here#
                             --Constrains End--
-                            IMPORTANT: The test cases should test the functionality of all the concepts that are related to topic of the question"""),
+                            IMPORTANT: The test cases should test the functionality of all the concepts that are related to topic of the question
+                            Make sure you also implement the Data Structure Classes WITHIN THE test_solution neccessary for running these test cases like when we use Data Structure in a solution, you should have Class of that Dataructure ready WITHIN the test_solution FUNCTION
+                            DO NOT GIVE ME THE SOLUTION TO THIS PROBLEM"""),
             ],
             temperature=0.1,
             max_tokens=2000,
