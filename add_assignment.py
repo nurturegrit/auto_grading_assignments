@@ -2,7 +2,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from backend.api.get_test_case import ASK_GPT4
 from backend.directory.make_test_files import Make_Files
 from backend.directory.getinput import GetInputs
-from database.DataBase import Connect_DB
+from DATABASE.DataBase import Connect_DB
 import pathlib
 import sys
 import json, os, logging
@@ -42,7 +42,11 @@ def write_description(description, dir, file_name, write_json=True):
 def make_assignment(dir, secret_key, endpoint, model_name):
     test_case_maker = ASK_GPT4(secret_key, endpoint=endpoint, model_name=model_name)
     get_questions = GetInputs(dir=dir, solution=False)
-    subject = 'Python'
+
+    # Read subject from config.json
+    with open(os.path.join(dir, 'config.json')) as f:
+        config = json.load(f)
+        subject = config['subject_name']
     
     with ThreadPoolExecutor() as executor:
         future_to_filename = {executor.submit(generate_description, test_case_maker, question, subject): file_name

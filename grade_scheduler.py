@@ -4,6 +4,7 @@ import datetime
 import heapq
 import pathlib
 import os
+import subprocess
 
 from backend.logger_config import setup_logger
 
@@ -77,7 +78,7 @@ class GradeScheduler:
             else:
                 self.requests_left -= int(req[0])
                 grading_logger.info(f"Grading {req[1]} for {req[2]} with {req[0]} requests.")
-                os.system(f'python grade_once.py {req[1]} {req[2]}')
+                subprocess.run(['python', 'grade_once.py', req[1], req[2]])
                 done.append((req[1], req[2]))
 
         self.stop(done)

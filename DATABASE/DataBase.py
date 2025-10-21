@@ -1,4 +1,5 @@
 import sqlite3
+import os
 
 class Connect_DB:
     def __init__(self, path: str):
@@ -67,9 +68,29 @@ class Connect_DB:
         self.cursor.execute(query, (str(subject_id), assignment_topic, str(total_score)))
         self.connection.commit()
     
+    def get_teacher(self, email):
+        query = '''SELECT * FROM "teachers" WHERE "email" = ?'''
+        self.cursor.execute(query, (email,))
+        teacher = self.cursor.fetchone()
+        return teacher
+
+    def insert_teacher(self, email, password):
+        query = '''INSERT INTO teachers (email, password) VALUES (?, ?)'''
+        self.cursor.execute(query, (email, password))
+        self.connection.commit()
+
+    def create_teachers_table(self):
+        # Path to the SQL script
+        sql_file_path = os.path.join(os.path.dirname(__file__), 'add_teacher_table.sql')
+        with open(sql_file_path, 'r') as f:
+            sql_script = f.read()
+        self.cursor.executescript(sql_script)
+        self.connection.commit()
+
     def close_connection(self):
         self.connection.close()
 
 if __name__ == "__main__":
-    db = Connect_DB('database/data.db')
+    db = Connect_DB('DATABASE/data.db')
     print(db.get_intern_email(1))
+    db.close_connection()
