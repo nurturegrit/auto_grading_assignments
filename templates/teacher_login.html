@@ -56,10 +56,19 @@
     </div>
 
     <h1>Teacher Login</h1>
-    <form action="/teacher_dashboard" method="POST" onsubmit="return validateForm()">
-        <input type="text" class="form-control" id="username" placeholder="Username" required>
-        <input type="password" class="form-control" id="password" placeholder="Password" required>
-        <button type="submit" class="btn btn-primary btn-custom">Login</button>
+    <form method="POST" action="{{ url_for('teacher_login') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.email.label(class="form-control-label") }}
+            {{ form.email(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.password.label(class="form-control-label") }}
+            {{ form.password(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary btn-custom") }}
+        </div>
     </form>
 
     <!-- Bootstrap JS and dependencies -->

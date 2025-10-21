@@ -2,14 +2,16 @@ import os
 import json
 import pathlib
 import logging
+import subprocess
 from flask import Flask, render_template, session, request, redirect, flash, url_for
 from flask_wtf import FlaskForm
-from wtforms import StringField, EmailField, SubmitField
+from wtforms import StringField, EmailField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, Email
 from werkzeug.utils import secure_filename
-from database.DataBase import Connect_DB
+from DATABASE.DataBase import Connect_DB
 import add_assignment
 import re
+from functools import wraps
 
 # Configure logging
 logging.basicConfig(filename='teachers.log',level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -28,8 +30,15 @@ class StudentLoginForm(FlaskForm):
     student_email = EmailField('Student Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Login')
 
+class TeacherLoginForm(FlaskForm):
+    email = EmailField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Login')
+
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Replace with a strong secret key
+with open('config.json', 'r') as f:
+    config = json.load(f)
+app.secret_key = config['secret_key']
 
 # Silence Flask's built-in logging
 log_handler = logging.getLogger('werkzeug')  # Get the werkzeug logger
@@ -41,23 +50,39 @@ def log_request_info():
                     request.path, request.method, request.args,
                     session.get('student_email'))
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'teacher_id' not in session:
+            return redirect(url_for('teacher_login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
 @app.route('/')
 def welcome():
     app_logger.info("Accessed welcome page.")
     return render_template('welcome.html')
 
 
-@app.route('/teacher_login')
+@app.route('/teacher_login', methods=['GET', 'POST'])
 def teacher_login():
-    try:
-        app_logger.info("Accessed teacher login page.")
-        return render_template('teacher_login.html')
-    except Exception as e:
-        app_logger.error(f"Error accessing teacher login page: {e}")
-        return "An error occurred", 500
+    form = TeacherLoginForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
+        db = Connect_DB(pathlib.Path('DATABASE', 'data.db'))
+        teacher = db.get_teacher(email)
+        db.close_connection()
+        if teacher and teacher[2] == password:
+            session['teacher_id'] = teacher[0]
+            return redirect(url_for('teacher_dashboard'))
+        else:
+            flash('Invalid email or password.', 'danger')
+    return render_template('teacher_login.html', form=form)
 
 
 @app.route('/teacher_dashboard', methods=['GET', 'POST'])
+@login_required
 def teacher_dashboard():
     if request.method == 'POST':
         app_logger.info("Teacher dashboard accessed with POST method.")
@@ -91,6 +116,7 @@ def write_config_file(assignment_folder, config):
         raise
 
 @app.route('/create_assignment', methods=['GET', 'POST'])
+@login_required
 def create_assignment():
     if request.method == 'POST':
         app_logger.debug("Received POST request to create assignment with form data: %s", request.form)
@@ -128,10 +154,15 @@ def create_assignment():
                     f.write(question)
                     app_logger.info("Wrote question #%d for assignment '%s'.", i, assignment_name)
 
-            os.system(f'python add_assignment.py {assignment_name}')
+            result = subprocess.run(['python', 'add_assignment.py', assignment_name])
+
+            if result.returncode == 0:
+                flash("Assignment created successfully! Test cases are being generated.", "success")
+                app_logger.info("Assignment '%s' created successfully.", assignment_name)
+            else:
+                flash("Assignment created, but test case generation failed.", "danger")
+                app_logger.error("Test case generation failed for assignment '%s'.", assignment_name)
             
-            flash("Assignment created successfully!", "success")
-            app_logger.info("Assignment '%s' created successfully.", assignment_name)
             return redirect(url_for('edit_test_cases', assignment_name=assignment_name.replace(' ', '_')))
         except Exception as e:
             flash("An error occurred while creating the assignment. Please try again.", "danger")
@@ -141,6 +172,7 @@ def create_assignment():
     return render_template('create_assignment.html')
 
 @app.route('/edit_test_cases/<assignment_name>', methods=['GET', 'POST'])
+@login_required
 def edit_test_cases(assignment_name):
     assignment_folder = f"Input/{assignment_name}"
     test_cases_path = os.path.join(assignment_folder, "test_cases.json")
@@ -246,7 +278,7 @@ def upload_solutions(assignment_name):
         return redirect(url_for('student_login'))
 
     try:
-        db = Connect_DB(pathlib.Path('database', 'data.db'))
+        db = Connect_DB(pathlib.Path('DATABASE', 'data.db'))
         student_id = db.get_intern_id(email=student_email)
         db.close_connection()
     except Exception as e:
@@ -265,7 +297,7 @@ def upload_solutions(assignment_name):
             app_logger.info("Uploaded solution for question #%s by student '%s'.", question_num, student_name)
 
     flash("All solutions uploaded successfully!", "success")
-    os.system(f'python grade_scheduler.py {assignment_name} {student_email}')
+    subprocess.run(['python', 'grade_scheduler.py', assignment_name, student_email])
     app_logger.info("Grading scheduled for assignment '%s' for student '%s'.", assignment_name, student_email)
 
     return redirect(url_for('view_assignment', assignment_name=assignment_name))
